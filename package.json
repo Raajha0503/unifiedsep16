@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "http-server -p 3000 -o",
     "start": "http-server -p 3000",
-    "build": "npm run build:css",
-    "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "build": "echo 'Static site - no build needed'",
+    "build:css": "echo 'Using Tailwind via CDN'",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
