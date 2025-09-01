@@ -1,0 +1,53 @@
+{
+  "name": "barclays-unified-portal",
+  "version": "1.0.0",
+  "description": "Barclays Operations Portal - Unified access to all operational teams and services",
+  "main": "index.html",
+  "scripts": {
+    "dev": "http-server -p 3000 -o",
+    "start": "http-server -p 3000",
+    "build": "echo 'Static site - no build needed'",
+    "build:css": "echo 'Using Tailwind via CDN'",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "serve": "http-server -p 8080",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "barclays",
+    "operations",
+    "portal",
+    "finance",
+    "web-app",
+    "dashboard"
+  ],
+  "author": "Barclays Operations Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.10",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-html": "^7.1.0",
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2",
+    "postcss": "^8.4.32",
+    "prettier": "^3.1.1",
+    "tailwindcss": "^3.4.0"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barclays/unified-portal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/barclays/unified-portal/issues"
+  },
+  "homepage": "https://github.com/barclays/unified-portal#readme"
+}
