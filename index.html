@@ -1,0 +1,2245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Barclays Operations Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="https://www.barclays.co.uk/content/dam/icons/favicons/barclays/Eagle_RGB_Cyan_Large.svg"
+    />
+    <style>
+      :root {
+        --barclays-blue: #00aeef;
+        --barclays-blue-dark: #0077a3;
+        --barclays-blue-light: #1a222b;
+        --barclays-cyan: #00c1d5;
+        --barclays-red: #ff6b6b;
+        --barclays-yellow: #ffe066;
+        --barclays-green: #22c55e;
+      }
+
+      /* Dark Theme (Default) */
+      [data-theme='dark'] {
+        --barclays-bg: #10151a;
+        --barclays-surface: #1a222b;
+        --barclays-text: #e6f6fb;
+        --barclays-muted: #7fb7c9;
+        --barclays-border: #2a3a4d;
+        --barclays-input-bg: #10151a;
+        --barclays-header-bg: #1a222b;
+        --barclays-card-hover: rgba(0, 174, 239, 0.05);
+      }
+
+      /* Light Theme */
+      [data-theme='light'] {
+        --barclays-bg: #ffffff;
+        --barclays-surface: #f8fafc;
+        --barclays-text: #1a222b;
+        --barclays-muted: #475569;
+        --barclays-border: #cbd5e1;
+        --barclays-input-bg: #ffffff;
+        --barclays-header-bg: #ffffff;
+        --barclays-card-hover: rgba(0, 174, 239, 0.08);
+      }
+
+      /* Default to dark theme */
+      :root {
+        --barclays-bg: #10151a;
+        --barclays-surface: #1a222b;
+        --barclays-text: #e6f6fb;
+        --barclays-muted: #7fb7c9;
+        --barclays-border: #2a3a4d;
+        --barclays-input-bg: #10151a;
+        --barclays-header-bg: #1a222b;
+        --barclays-card-hover: rgba(0, 174, 239, 0.05);
+      }
+
+      body {
+        background: var(--barclays-bg) !important;
+        color: var(--barclays-text) !important;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      /* CSS containment for better performance */
+      .team-card {
+        contain: layout style paint;
+      }
+
+      /* Optimize theme switching performance */
+      :root {
+        color-scheme: light dark;
+      }
+
+      /* Optimized transitions - only on specific elements instead of universal selector */
+      body,
+      .barclays-header,
+      .team-card,
+      .search-container,
+      .barclays-btn,
+      .barclays-secondary-btn,
+      .form-input,
+      .search-input,
+      .filter-tab,
+      .modal-content {
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      /* Prevent transition flicker on page load */
+      .preload * {
+        transition: none !important;
+      }
+
+      .barclays-header {
+        background: var(--barclays-header-bg);
+        color: var(--barclays-text);
+        border-bottom: 1px solid var(--barclays-border);
+        transition: all 0.5s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      [data-theme='light'] .barclays-header {
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .barclays-btn {
+        background: var(--barclays-blue);
+        color: #fff;
+        transition:
+          background-color 0.2s ease,
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+        will-change: transform;
+      }
+
+      .barclays-btn:hover {
+        background: var(--barclays-blue-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 174, 239, 0.3);
+      }
+
+      .barclays-secondary-btn {
+        background: var(--barclays-surface);
+        color: var(--barclays-text);
+        border: 1px solid var(--barclays-border);
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease,
+          transform 0.2s ease;
+        will-change: transform;
+      }
+
+      .barclays-secondary-btn:hover {
+        background: var(--barclays-border);
+        color: var(--barclays-text);
+        transform: translateY(-2px);
+      }
+
+      [data-theme='light'] .barclays-secondary-btn:hover {
+        background: var(--barclays-blue);
+        color: white;
+      }
+
+      .barclays-logo {
+        height: 50px;
+        margin-right: 12px;
+        display: inline-block;
+        vertical-align: middle;
+        background: transparent;
+      }
+
+      .barclays-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        display: inline-block;
+        vertical-align: middle;
+        stroke: currentColor;
+        fill: none;
+      }
+
+      .barclays-icon-lg {
+        width: 3rem;
+        height: 3rem;
+      }
+
+      /* Enhanced Splash screen styles */
+      #splashScreen {
+        position: fixed;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(135deg, var(--barclays-blue-dark) 0%, #001a2c 50%, var(--barclays-blue-dark) 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        opacity: 1;
+        pointer-events: all;
+        overflow: hidden;
+      }
+
+      #splashScreen::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 50% 50%, rgba(0, 174, 239, 0.1) 0%, transparent 70%);
+        animation: pulse 3s ease-in-out infinite;
+      }
+
+      #splashScreen.fade-out {
+        opacity: 0;
+        transform: scale(1.05) rotate(1deg);
+        pointer-events: none;
+      }
+
+      #splashScreen .barclays-logo {
+        height: 120px;
+        margin-bottom: 32px;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        animation:
+          logoFloat 2s ease-in-out infinite,
+          logoGlow 3s ease-in-out infinite;
+        filter: drop-shadow(0 0 20px rgba(0, 174, 239, 0.3));
+        z-index: 2;
+        position: relative;
+        transition:
+          opacity 1s ease-out,
+          transform 1s ease-out,
+          filter 1s ease-out;
+      }
+
+      #splashScreen .welcome-text {
+        color: #fff;
+        font-size: 2rem;
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        text-align: center;
+        animation:
+          textSlideIn 1.5s ease-out 0.5s both,
+          textGlow 2s ease-in-out infinite 1.5s;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        z-index: 2;
+        position: relative;
+        transition:
+          opacity 0.8s ease-out,
+          transform 0.8s ease-out;
+      }
+
+      #splashScreen .loading-dots {
+        display: flex;
+        gap: 8px;
+        margin-top: 24px;
+        z-index: 2;
+        position: relative;
+        transition: opacity 0.6s ease-out;
+      }
+
+      #splashScreen .loading-dots .dot {
+        width: 8px;
+        height: 8px;
+        background: #00c1d5;
+        border-radius: 50%;
+        animation: dotBounce 1.4s ease-in-out infinite;
+      }
+
+      #splashScreen .loading-dots .dot:nth-child(1) {
+        animation-delay: 0s;
+      }
+      #splashScreen .loading-dots .dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      #splashScreen .loading-dots .dot:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      /* Team Card Styles */
+      .team-card {
+        background: var(--barclays-surface);
+        border: 2px solid transparent;
+        border-radius: 16px;
+        padding: 2rem;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease,
+          border-color 0.3s ease,
+          background-color 0.2s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        will-change: transform;
+      }
+
+      .team-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--barclays-card-hover);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 1;
+      }
+
+      .team-card:hover {
+        border-color: var(--barclays-blue);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 174, 239, 0.15);
+      }
+
+      .team-card:hover::before {
+        opacity: 1;
+      }
+
+      .team-card-content {
+        position: relative;
+        z-index: 2;
+      }
+
+      .team-icon {
+        width: 4rem;
+        height: 4rem;
+        background: var(--barclays-blue);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .team-card:hover .team-icon {
+        background: var(--barclays-cyan);
+        transform: rotate(5deg) scale(1.1);
+      }
+
+      .team-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--barclays-text);
+        margin-bottom: 0.75rem;
+        transition: color 0.3s ease;
+      }
+
+      .team-card:hover .team-title {
+        color: var(--barclays-cyan);
+      }
+
+      .team-description {
+        color: var(--barclays-muted);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+      }
+
+      .team-metrics {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .metric {
+        flex: 1;
+        text-align: center;
+        padding: 0.75rem;
+        background: rgba(0, 174, 239, 0.1);
+        border-radius: 8px;
+        border: 1px solid rgba(0, 174, 239, 0.2);
+      }
+
+      .metric-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--barclays-cyan);
+      }
+
+      .metric-label {
+        font-size: 0.75rem;
+        color: var(--barclays-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .team-actions {
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .action-btn {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        text-align: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        font-size: 0.875rem;
+      }
+
+      .action-primary {
+        background: var(--barclays-blue);
+        color: white;
+      }
+
+      .action-primary:hover {
+        background: var(--barclays-blue-dark);
+        transform: translateY(-2px);
+      }
+
+      .action-secondary {
+        background: transparent;
+        color: var(--barclays-cyan);
+        border: 1px solid var(--barclays-cyan);
+      }
+
+      .action-secondary:hover {
+        background: var(--barclays-cyan);
+        color: var(--barclays-bg);
+      }
+
+      /* Search and Filter Styles */
+      .search-container {
+        background: var(--barclays-surface);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--barclays-border);
+      }
+
+      [data-theme='light'] .search-container {
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+      }
+
+      .search-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .search-input {
+        background: var(--barclays-input-bg);
+        border: 2px solid var(--barclays-border);
+        color: var(--barclays-text);
+        padding: 1rem 3rem 1rem 1.5rem;
+        border-radius: 12px;
+        font-size: 1.125rem;
+        width: 100%;
+        transition:
+          border-color 0.2s ease,
+          background-color 0.2s ease,
+          color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--barclays-blue);
+        box-shadow: 0 0 0 4px rgba(0, 174, 239, 0.1);
+      }
+
+      .clear-search-btn {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--barclays-muted);
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .clear-search-btn:hover {
+        background: rgba(255, 107, 107, 0.1);
+        color: var(--barclays-red);
+      }
+
+      .search-results-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1rem 0 0.5rem 0;
+        font-size: 0.875rem;
+        color: var(--barclays-muted);
+      }
+
+      .results-count {
+        font-weight: 500;
+      }
+
+      .search-suggestions {
+        font-style: italic;
+        opacity: 0.8;
+      }
+
+      .filter-tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .filter-tab {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        background: transparent;
+        color: var(--barclays-muted);
+        border: 1px solid var(--barclays-muted);
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease;
+        cursor: pointer;
+        font-size: 0.875rem;
+      }
+
+      .filter-tab.active,
+      .filter-tab:hover {
+        background: var(--barclays-blue);
+        color: white;
+        border-color: var(--barclays-blue);
+      }
+
+      /* No Results Styles */
+      .no-results {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+        background: var(--barclays-surface);
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s ease;
+      }
+
+      .no-results.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .no-results-content {
+        text-align: center;
+        max-width: 400px;
+        padding: 2rem;
+      }
+
+      .no-results-icon {
+        width: 4rem;
+        height: 4rem;
+        color: var(--barclays-muted);
+        margin: 0 auto 1.5rem auto;
+        opacity: 0.7;
+      }
+
+      .no-results h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--barclays-text);
+        margin-bottom: 0.75rem;
+      }
+
+      .no-results p {
+        color: var(--barclays-muted);
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+
+      .no-results button {
+        padding: 0.75rem 2rem;
+      }
+
+      /* Status Indicator Styles */
+      .status-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+
+      .status-online .status-dot {
+        background: var(--barclays-green);
+      }
+
+      .status-warning .status-dot {
+        background: var(--barclays-yellow);
+      }
+
+      .status-offline .status-dot {
+        background: var(--barclays-red);
+      }
+
+      /* Animations */
+      @keyframes logoFloat {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      @keyframes logoGlow {
+        0%,
+        100% {
+          filter: drop-shadow(0 0 20px rgba(0, 174, 239, 0.3));
+        }
+        50% {
+          filter: drop-shadow(0 0 30px rgba(0, 174, 239, 0.6));
+        }
+      }
+
+      @keyframes textSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px) scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes textGlow {
+        0%,
+        100% {
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        50% {
+          text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+      }
+
+      @keyframes dotBounce {
+        0%,
+        80%,
+        100% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+        40% {
+          transform: scale(1.2);
+          opacity: 1;
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .team-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .team-metrics {
+          flex-direction: column;
+        }
+
+        .team-actions {
+          flex-direction: column;
+        }
+
+        .filter-tabs {
+          justify-content: center;
+        }
+      }
+
+      /* Theme-aware overrides for better consistency */
+      .bg-white,
+      .bg-gray-100,
+      .bg-gray-50 {
+        background-color: var(--barclays-surface) !important;
+      }
+
+      .text-gray-800,
+      .text-gray-700,
+      .text-gray-600 {
+        color: var(--barclays-text) !important;
+      }
+
+      .border-gray-300,
+      .border-gray-200 {
+        border-color: var(--barclays-border) !important;
+      }
+
+      input,
+      select,
+      textarea {
+        background: var(--barclays-input-bg) !important;
+        color: var(--barclays-text) !important;
+        border-color: var(--barclays-border) !important;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none !important;
+        border-color: var(--barclays-blue) !important;
+        box-shadow: 0 0 0 2px rgba(0, 174, 239, 0.2) !important;
+      }
+
+      /* Light theme specific adjustments */
+      [data-theme='light'] .status-indicator {
+        opacity: 0.9;
+      }
+
+      [data-theme='light'] .team-card {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--barclays-border);
+      }
+
+      [data-theme='light'] .team-card:hover {
+        box-shadow: 0 20px 40px rgba(0, 174, 239, 0.1);
+      }
+
+      /* Ensure high contrast text in light mode */
+      [data-theme='light'] h1,
+      [data-theme='light'] h2,
+      [data-theme='light'] h3,
+      [data-theme='light'] .team-title,
+      [data-theme='light'] .modal-title {
+        color: #0f172a !important;
+        font-weight: 700;
+      }
+
+      [data-theme='light'] p,
+      [data-theme='light'] .team-description,
+      [data-theme='light'] .footer-text {
+        color: #334155 !important;
+      }
+
+      [data-theme='light'] .text-cyan-200 {
+        color: var(--barclays-muted) !important;
+      }
+
+      [data-theme='light'] .filter-tab {
+        color: #475569;
+        border-color: #94a3b8;
+      }
+
+      [data-theme='light'] .filter-tab:hover,
+      [data-theme='light'] .filter-tab.active {
+        color: white;
+        background: var(--barclays-blue);
+        border-color: var(--barclays-blue);
+      }
+
+      /* Ensure metric text is visible in light mode */
+      [data-theme='light'] .metric-value {
+        color: var(--barclays-blue) !important;
+        font-weight: 800;
+      }
+
+      [data-theme='light'] .metric-label {
+        color: #475569 !important;
+        font-weight: 600;
+      }
+
+      /* Form labels in light mode */
+      [data-theme='light'] .form-label {
+        color: #0f172a !important;
+        font-weight: 600;
+      }
+
+      /* Status text in light mode */
+      [data-theme='light'] .status-indicator {
+        color: #334155 !important;
+        font-weight: 500;
+      }
+
+      /* Search container title */
+      [data-theme='light'] .search-container h2 {
+        color: #0f172a !important;
+      }
+
+      /* Header text in light mode */
+      [data-theme='light'] .barclays-header h1 {
+        color: #0f172a !important;
+      }
+
+      [data-theme='light'] .barclays-header .text-cyan-200,
+      [data-theme='light'] .text-cyan-200 {
+        color: #475569 !important;
+      }
+
+      /* Ensure all white text is dark in light mode */
+      [data-theme='light'] .text-white {
+        color: #0f172a !important;
+      }
+
+      /* Button text in light mode */
+      [data-theme='light'] .barclays-secondary-btn {
+        color: #334155 !important;
+      }
+
+      /* Login Modal Styles */
+      .login-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        overflow-y: auto;
+        padding: 20px;
+        box-sizing: border-box;
+      }
+
+      .login-modal.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(16, 21, 26, 0.95);
+        backdrop-filter: blur(8px);
+      }
+
+      .modal-content {
+        position: relative;
+        background: var(--barclays-surface);
+        border: 1px solid var(--barclays-border);
+        border-radius: 20px;
+        width: 100%;
+        max-width: 450px;
+        max-height: calc(100vh - 40px);
+        margin: auto;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        transform: translateY(20px) scale(0.95);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        overflow-y: auto;
+        flex-shrink: 0;
+      }
+
+      [data-theme='light'] .modal-content {
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+      }
+
+      .login-modal.show .modal-content {
+        transform: translateY(0) scale(1);
+      }
+
+      .modal-header {
+        padding: 2rem 2rem 1rem 2rem;
+        border-bottom: 1px solid var(--barclays-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .modal-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--barclays-text);
+        margin: 0;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        color: var(--barclays-muted);
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 0;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+      }
+
+      .close-btn:hover {
+        background: rgba(255, 107, 107, 0.1);
+        color: var(--barclays-red);
+      }
+
+      .login-form {
+        padding: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        color: var(--barclays-text);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        background: var(--barclays-input-bg);
+        border: 2px solid var(--barclays-border);
+        border-radius: 12px;
+        color: var(--barclays-text);
+        font-size: 1rem;
+        transition:
+          border-color 0.2s ease,
+          background-color 0.2s ease,
+          color 0.2s ease,
+          box-shadow 0.2s ease;
+        box-sizing: border-box;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--barclays-blue);
+        box-shadow: 0 0 0 4px rgba(0, 174, 239, 0.1);
+      }
+
+      .form-input::placeholder {
+        color: var(--barclays-muted);
+      }
+
+      [data-theme='light'] .form-input::placeholder,
+      [data-theme='light'] .search-input::placeholder {
+        color: #64748b;
+      }
+
+      [data-theme='light'] .form-input,
+      [data-theme='light'] .search-input {
+        border-color: #cbd5e1;
+        background: #ffffff;
+      }
+
+      [data-theme='light'] .form-input:focus,
+      [data-theme='light'] .search-input:focus {
+        border-color: var(--barclays-blue);
+        background: #ffffff;
+      }
+
+      .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .checkbox-container {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        color: var(--barclays-text);
+        font-size: 0.875rem;
+        user-select: none;
+      }
+
+      .checkbox-container input[type='checkbox'] {
+        display: none;
+      }
+
+      .checkmark {
+        width: 18px;
+        height: 18px;
+        background: var(--barclays-input-bg);
+        border: 2px solid var(--barclays-border);
+        border-radius: 4px;
+        margin-right: 0.5rem;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .checkbox-container input:checked + .checkmark {
+        background: var(--barclays-blue);
+        border-color: var(--barclays-blue);
+      }
+
+      .checkbox-container input:checked + .checkmark::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .forgot-password {
+        color: var(--barclays-cyan);
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+      }
+
+      .forgot-password:hover {
+        color: var(--barclays-blue);
+        text-decoration: underline;
+      }
+
+      .login-submit-btn {
+        width: 100%;
+        padding: 1rem 2rem;
+        background: var(--barclays-blue);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .login-submit-btn:hover {
+        background: var(--barclays-blue-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 174, 239, 0.3);
+      }
+
+      .login-submit-btn:active {
+        transform: translateY(0);
+      }
+
+      .login-submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-loading {
+        display: none;
+      }
+
+      .modal-footer {
+        padding: 1rem 2rem 2rem 2rem;
+        border-top: 1px solid var(--barclays-border);
+        text-align: center;
+      }
+
+      .footer-text {
+        color: var(--barclays-muted);
+        font-size: 0.875rem;
+        margin: 0;
+      }
+
+      .footer-text a {
+        color: var(--barclays-cyan);
+        text-decoration: none;
+      }
+
+      .footer-text a:hover {
+        text-decoration: underline;
+      }
+
+      .sample-credentials {
+        background: rgba(0, 174, 239, 0.05);
+        border: 1px solid rgba(0, 174, 239, 0.2);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .sample-credentials p {
+        margin: 0;
+      }
+
+      .sample-credentials strong {
+        color: var(--barclays-cyan);
+      }
+
+      [data-theme='light'] .sample-credentials {
+        background: rgba(0, 174, 239, 0.08);
+        border-color: rgba(0, 174, 239, 0.3);
+      }
+
+      [data-theme='light'] .sample-credentials strong {
+        color: var(--barclays-blue);
+      }
+
+      /* Responsive modal */
+      @media (max-width: 768px) {
+        .login-modal {
+          padding: 15px;
+          align-items: flex-start;
+          padding-top: 5vh;
+        }
+
+        .modal-content {
+          max-height: calc(100vh - 30px);
+          margin: 0;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .login-modal {
+          padding: 10px;
+          padding-top: 5vh;
+        }
+
+        .modal-content {
+          margin: 0;
+          border-radius: 16px;
+          max-height: calc(100vh - 20px);
+        }
+
+        .modal-header {
+          padding: 1.5rem 1.5rem 1rem 1.5rem;
+        }
+
+        .modal-title {
+          font-size: 1.25rem;
+        }
+
+        .login-form {
+          padding: 1.5rem;
+        }
+
+        .modal-footer {
+          padding: 1rem 1.5rem 1.5rem 1.5rem;
+        }
+
+        .form-options {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.75rem;
+        }
+
+        .checkbox-container {
+          justify-content: center;
+        }
+
+        .sample-credentials {
+          padding: 0.75rem;
+        }
+
+        .sample-credentials p {
+          font-size: 0.75rem;
+        }
+      }
+
+      @media (max-height: 600px) {
+        .login-modal {
+          align-items: flex-start;
+          padding-top: 20px;
+        }
+
+        .modal-content {
+          max-height: calc(100vh - 40px);
+        }
+
+        .modal-header {
+          padding: 1rem 2rem 0.75rem 2rem;
+        }
+
+        .login-form {
+          padding: 1rem 2rem;
+        }
+
+        .modal-footer {
+          padding: 0.75rem 2rem 1rem 2rem;
+        }
+      }
+    </style>
+    <script>
+      // Apply theme immediately to prevent flash
+      (function () {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        document.body.setAttribute('data-theme', savedTheme);
+        document.documentElement.classList.add('preload');
+
+        // Remove preload class after page loads to enable transitions
+        window.addEventListener('load', function () {
+          setTimeout(() => {
+            document.documentElement.classList.remove('preload');
+          }, 100);
+        });
+      })();
+    </script>
+  </head>
+  <body class="min-h-screen">
+    <!-- Enhanced Splash Screen -->
+    <div id="splashScreen">
+      <img
+        class="barclays-logo"
+        src="https://www.barclays.co.uk/content/dam/icons/favicons/barclays/Eagle_RGB_Cyan_Large.svg"
+        alt="Barclays Logo"
+      />
+      <div class="welcome-text">Welcome to Barclays Operations Portal</div>
+      <div class="loading-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="barclays-header py-6 px-6" style="display: none">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center">
+            <img
+              class="barclays-logo"
+              src="https://www.barclays.co.uk/content/dam/icons/favicons/barclays/Eagle_RGB_Cyan_Large.svg"
+              alt="Barclays Logo"
+            />
+            <div>
+              <h1 class="text-3xl font-bold text-white">Barclays Operations Portal</h1>
+              <p class="text-sm text-cyan-200 mt-1">Unified access to all operational teams and services</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="status-indicator status-online">
+              <span class="status-dot"></span>
+              <span>All Systems Online</span>
+            </div>
+            <button
+              id="darkModeToggle"
+              class="barclays-secondary-btn px-4 py-2 rounded-lg font-medium flex items-center gap-2"
+              title="Switch Theme"
+            >
+              <span>☀️</span>
+              <span>Light Mode</span>
+            </button>
+            <button id="signInBtn" class="barclays-btn px-6 py-2 rounded-lg font-medium">Sign In</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal" style="display: none">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Sign In to Barclays Operations Portal</h2>
+          <button id="closeModal" class="close-btn">&times;</button>
+        </div>
+        <form id="loginForm" class="login-form">
+          <div class="form-group">
+            <label for="username" class="form-label">Username or Email</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              class="form-input"
+              placeholder="Enter your username or email"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="form-input"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <div class="form-options">
+            <label class="checkbox-container">
+              <input type="checkbox" id="rememberMe" name="rememberMe" />
+              <span class="checkmark"></span>
+              Remember me
+            </label>
+            <a href="#" class="forgot-password">Forgot password?</a>
+          </div>
+          <button type="submit" class="login-submit-btn">
+            <span class="btn-text">Sign In</span>
+            <span class="btn-loading" style="display: none">Signing in...</span>
+          </button>
+        </form>
+        <div class="modal-footer">
+          <div class="sample-credentials">
+            <p class="footer-text" style="margin-bottom: 0.75rem"><strong>Sample Credentials for Testing:</strong></p>
+            <p class="footer-text" style="font-family: monospace; font-size: 0.8rem; margin-bottom: 0.5rem">
+              <strong>Username:</strong> demo &nbsp;&nbsp; <strong>Password:</strong> demo
+            </p>
+            <p class="footer-text" style="font-family: monospace; font-size: 0.8rem; margin-bottom: 1rem">
+              <strong>Username:</strong> admin &nbsp;&nbsp; <strong>Password:</strong> barclays123
+            </p>
+          </div>
+          <p class="footer-text">Need help? Contact <a href="#">IT Support</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="mainContent" class="max-w-7xl mx-auto px-6 py-8" style="display: none">
+      <!-- Search and Filter Section -->
+      <div class="search-container fade-in-up">
+        <h2 class="text-2xl font-bold text-white mb-4">Find Your Team</h2>
+        <div class="search-wrapper">
+          <input
+            type="text"
+            id="searchInput"
+            class="search-input"
+            placeholder="Search teams by name, function, or service..."
+          />
+          <button id="clearSearch" class="clear-search-btn" style="display: none" title="Clear search">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="search-results-info">
+          <span id="resultsCount" class="results-count"></span>
+          <span id="searchSuggestions" class="search-suggestions"></span>
+        </div>
+        <div class="filter-tabs">
+          <button class="filter-tab active" data-category="all">All Teams</button>
+          <button class="filter-tab" data-category="operations">Operations</button>
+          <button class="filter-tab" data-category="risk">Risk & Compliance</button>
+          <button class="filter-tab" data-category="technology">Technology</button>
+          <button class="filter-tab" data-category="finance">Finance</button>
+          <button class="filter-tab" data-category="client">Client Services</button>
+        </div>
+      </div>
+
+      <!-- No Results Message -->
+      <div id="noResults" class="no-results" style="display: none">
+        <div class="no-results-content">
+          <svg class="no-results-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+          <h3>No teams found</h3>
+          <p>Try adjusting your search or browse all teams by selecting a category above.</p>
+          <button id="clearFilters" class="barclays-secondary-btn">Clear Filters</button>
+        </div>
+      </div>
+
+      <!-- Teams Grid -->
+      <div class="team-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="teamsGrid">
+        <!-- Reference Data Team -->
+        <div
+          class="team-card fade-in-up"
+          data-category="operations"
+          data-keywords="reference data master static pricing securities instruments"
+        >
+          <div class="team-card-content">
+            <div class="team-icon">
+              <svg class="barclays-icon text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <h3 class="team-title">Reference Data</h3>
+            <p class="team-description">
+              Master data management for securities, instruments, pricing, and static data. Ensuring data accuracy and
+              consistency across all trading systems.
+            </p>
+            <div class="team-metrics">
+              <div class="metric">
+                <div class="metric-value">99.9%</div>
+                <div class="metric-label">Data Accuracy</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value">24/7</div>
+                <div class="metric-label">Support</div>
+              </div>
+            </div>
+            <div class="team-actions">
+              <a href="https://reference-data-yhhs.vercel.app/" target="_blank" class="action-btn action-primary">Access Portal</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Network Management Team -->
+        <div
+          class="team-card fade-in-up"
+          data-category="technology"
+          data-keywords="network infrastructure connectivity systems monitoring"
+        >
+          <div class="team-card-content">
+            <div class="team-icon">
+              <svg class="barclays-icon text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h6a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h6a2 2 0 002-2v-4a2 2 0 00-2-2m8-8a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V4z"
+                />
+              </svg>
+            </div>
+            <h3 class="team-title">Network Management</h3>
+            <p class="team-description">
+              Infrastructure monitoring, connectivity management, and system performance optimization. Maintaining
+              robust network operations across all platforms.
+            </p>
+            <div class="team-metrics">
+              <div class="metric">
+                <div class="metric-value">99.95%</div>
+                <div class="metric-label">Uptime</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value">24/7</div>
+                <div class="metric-label">Monitoring</div>
+              </div>
+            </div>
+            <div class="team-actions">
+              <a href="https://nwm-rho.vercel.app/" target="_blank" class="action-btn action-primary">Access Portal</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Middle Office Team -->
+        <div
+          class="team-card fade-in-up"
+          data-category="operations"
+          data-keywords="middle office trade processing reconciliation lifecycle"
+        >
+          <div class="team-card-content">
+            <div class="team-icon">
+              <svg class="barclays-icon text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            </div>
+            <h3 class="team-title">Middle Office</h3>
+            <p class="team-description">
+              Trade processing, reconciliation, and lifecycle management. Bridge between front office trading and back
+              office operations.
+            </p>
+            <div class="team-metrics">
+              <div class="metric">
+                <div class="metric-value">15M+</div>
+                <div class="metric-label">Daily Trades</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value">STP</div>
+                <div class="metric-label">Processing</div>
+              </div>
+            </div>
+            <div class="team-actions">
+              <a href="https://barclays-middle-office-git-main-parshwa-ghorawaths-projects.vercel.app/" target="_blank" class="action-btn action-primary">Access Portal</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confirmations Team -->
+        <div
+          class="team-card fade-in-up"
+          data-category="operations"
+          data-keywords="confirmations trade matching counterparty affirmation"
+        >
+          <div class="team-card-content">
+            <div class="team-icon">
+              <svg class="barclays-icon text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h3 class="team-title">Confirmations</h3>
+            <p class="team-description">
+              Trade confirmation management, counterparty matching, and electronic affirmation processing for all trade
+              types.
+            </p>
+            <div class="team-metrics">
+              <div class="metric">
+                <div class="metric-value">98.5%</div>
+                <div class="metric-label">Match Rate</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value">T+0</div>
+                <div class="metric-label">Confirmation</div>
+              </div>
+            </div>
+            <div class="team-actions">
+              <a href="https://barclays-confirmations-final000.vercel.app/" target="_blank" class="action-btn action-primary">Access Portal</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Collateral Team -->
+        <div
+          class="team-card fade-in-up"
+          data-category="risk"
+          data-keywords="collateral margin requirements optimization exposure"
+        >
+          <div class="team-card-content">
+            <div class="team-icon">
+              <svg class="barclays-icon text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+            </div>
+            <h3 class="team-title">Collateral</h3>
+            <p class="team-description">
+              Collateral management, margin requirements, optimization strategies, and exposure monitoring for risk
+              mitigation.
+            </p>
+            <div class="team-actions">
+              <a href="https://collateralhosting2.vercel.app" target="_blank" class="action-btn action-primary">Access Portal</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cost Management Team -->
+        <div
+          class="team-card fade-in-up"
+          data-category="finance"
+          data-keywords="cost management budgeting optimization allocation expenses"
+        >
+          <div class="team-card-content">
+            <div class="team-icon">
+              <svg class="barclays-icon text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h3 class="team-title">Cost Management</h3>
+            <p class="team-description">
+              Cost optimization, budget allocation, expense tracking, and financial efficiency initiatives across all
+              business lines.
+            </p>
+            <div class="team-actions">
+              <a href="https://costmgmt-csh.vercel.app" target="_blank" class="action-btn action-primary">Access Portal</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settlements Team -->
+        <div
+          class="team-card fade-in-up"
+          data-category="operations"
+          data-keywords="settlements payment processing clearing custody"
+        >
+          <div class="team-card-content">
+            <div class="team-icon">
+              <svg class="barclays-icon text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
+                />
+              </svg>
+            </div>
+            <h3 class="team-title">Settlements</h3>
+            <p class="team-description">
+              Trade settlement processing, payment systems, clearing operations, and custody services for seamless
+              transaction completion.
+            </p>
+            <div class="team-metrics">
+              <div class="metric">
+                <div class="metric-value">99.8%</div>
+                <div class="metric-label">Settlement Rate</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value">T+2</div>
+                <div class="metric-label">Standard Cycle</div>
+              </div>
+            </div>
+            <div class="team-actions">
+              <a href="https://settlementstrade143.vercel.app/" target="_blank" class="action-btn action-primary">Access Portal</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Regulatory Adherence Team -->
+        <div
+          class="team-card fade-in-up"
+          data-category="risk"
+          data-keywords="regulatory compliance adherence reporting governance"
+        >
+          <div class="team-card-content">
+            <div class="team-icon">
+              <svg class="barclays-icon text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <h3 class="team-title">Regulatory Adherence</h3>
+            <p class="team-description">
+              Regulatory compliance monitoring, reporting obligations, governance frameworks, and adherence to global
+              financial regulations.
+            </p>
+            <div class="team-metrics">
+              <div class="metric">
+                <div class="metric-value">100%</div>
+                <div class="metric-label">Compliance Rate</div>
+              </div>
+              <div class="metric">
+                <div class="metric-value">50+</div>
+                <div class="metric-label">Jurisdictions</div>
+              </div>
+            </div>
+            <div class="team-actions">
+              <a href="https://samyakkjainn-coder.github.io/Barclays-regulatory-adherence/#live-demo" target="_blank" class="action-btn action-primary">Access Portal</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Operations MI Team -->
+        <div
+          class="team-card fade-in-up"
+          data-category="operations"
+          data-keywords="operations MI management information dashboards analytics reporting interactive"
+        >
+          <div class="team-card-content">
+            <div class="team-icon">
+              <svg class="barclays-icon text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+            </div>
+            <h3 class="team-title">Operations MI</h3>
+            <p class="team-description">
+              Interactive dashboards and management information systems providing real-time operational insights, 
+              analytics, and performance metrics across all business functions.
+            </p>
+            <div class="team-actions">
+              <a href="https://gemini.google.com/share/f64b2791d480" target="_blank" class="action-btn action-primary">Access Portal</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // Initialize the application
+      function initApp() {
+        const splash = document.getElementById('splashScreen');
+        const mainContent = document.getElementById('mainContent');
+        const header = document.querySelector('header');
+
+        // Ensure splash screen is visible initially
+        if (splash) {
+          splash.style.display = 'flex';
+          splash.classList.remove('fade-out');
+        }
+        if (mainContent) mainContent.style.display = 'none';
+        if (header) header.style.display = 'none';
+
+        // Enhanced exit animation
+        setTimeout(() => {
+          if (splash) {
+            splash.classList.add('fade-out');
+            setTimeout(() => {
+              splash.style.display = 'none';
+              // Show header and main content with animations
+              if (header) {
+                header.style.display = 'block';
+                header.style.opacity = '0';
+                header.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                  header.style.transition = 'all 0.6s ease';
+                  header.style.opacity = '1';
+                  header.style.transform = 'translateY(0)';
+                }, 100);
+              }
+              if (mainContent) {
+                mainContent.style.display = 'block';
+                mainContent.style.opacity = '0';
+                mainContent.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                  mainContent.style.transition = 'all 0.8s ease';
+                  mainContent.style.opacity = '1';
+                  mainContent.style.transform = 'translateY(0)';
+                }, 200);
+              }
+            }, 1200);
+          }
+        }, 3000);
+
+        // Add staggered animation to team cards
+        setTimeout(() => {
+          const cards = document.querySelectorAll('.team-card');
+          cards.forEach((card, index) => {
+            setTimeout(() => {
+              card.style.opacity = '0';
+              card.style.transform = 'translateY(30px)';
+              card.style.transition = 'all 0.6s ease';
+              setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+              }, 50);
+            }, index * 100);
+          });
+        }, 4000);
+      }
+
+      // Enhanced Search and Filter Functionality
+      let currentCategory = 'all';
+      let searchTimeout = null;
+
+      // All available team data for search suggestions
+      const teamData = [
+        {
+          name: 'Reference Data',
+          keywords: ['reference', 'data', 'master', 'static', 'pricing', 'securities', 'instruments'],
+        },
+        {
+          name: 'Network Management',
+          keywords: ['network', 'infrastructure', 'connectivity', 'systems', 'monitoring'],
+        },
+        { name: 'Middle Office', keywords: ['middle', 'office', 'trade', 'processing', 'reconciliation', 'lifecycle'] },
+        { name: 'Confirmations', keywords: ['confirmations', 'trade', 'matching', 'counterparty', 'affirmation'] },
+        { name: 'Collateral', keywords: ['collateral', 'margin', 'requirements', 'optimization', 'exposure'] },
+        {
+          name: 'Cost Management',
+          keywords: ['cost', 'management', 'budgeting', 'optimization', 'allocation', 'expenses'],
+        },
+        { name: 'Settlements', keywords: ['settlements', 'payment', 'processing', 'clearing', 'custody'] },
+        {
+          name: 'Regulatory Adherence',
+          keywords: ['regulatory', 'compliance', 'adherence', 'reporting', 'governance'],
+        },
+        {
+          name: 'Operations MI',
+          keywords: ['operations', 'MI', 'management', 'information', 'dashboards', 'analytics', 'reporting', 'interactive'],
+        },
+      ];
+
+      function initializeSearch() {
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearSearch');
+        const clearFiltersBtn = document.getElementById('clearFilters');
+        const filterTabs = document.querySelectorAll('.filter-tab');
+
+        // Search input event listeners
+        searchInput.addEventListener('input', function () {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            performSearch();
+          }, 300); // Debounce search
+
+          // Show/hide clear button
+          clearBtn.style.display = this.value ? 'flex' : 'none';
+        });
+
+        searchInput.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') {
+            clearSearch();
+          }
+        });
+
+        // Clear search button
+        clearBtn.addEventListener('click', clearSearch);
+
+        // Clear filters button
+        clearFiltersBtn.addEventListener('click', clearAllFilters);
+
+        // Filter tab event listeners
+        filterTabs.forEach(tab => {
+          tab.addEventListener('click', function () {
+            const category = this.getAttribute('data-category');
+            filterByCategory(category);
+          });
+        });
+
+        // Initial search
+        performSearch();
+      }
+
+      function performSearch() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+        const cards = document.querySelectorAll('.team-card');
+        const teamsGrid = document.getElementById('teamsGrid');
+        const noResults = document.getElementById('noResults');
+        let visibleCount = 0;
+        let matchingCards = [];
+
+        cards.forEach(card => {
+          const title = card.querySelector('.team-title').textContent.toLowerCase();
+          const description = card.querySelector('.team-description').textContent.toLowerCase();
+          const keywords = card.getAttribute('data-keywords').toLowerCase();
+          const category = card.getAttribute('data-category');
+
+          // Check if matches search term
+          const searchMatch =
+            !searchTerm ||
+            title.includes(searchTerm) ||
+            description.includes(searchTerm) ||
+            keywords.includes(searchTerm);
+
+          // Check if matches current category filter
+          const categoryMatch = currentCategory === 'all' || category === currentCategory;
+
+          const shouldShow = searchMatch && categoryMatch;
+
+          if (shouldShow) {
+            visibleCount++;
+            matchingCards.push({
+              element: card,
+              title: card.querySelector('.team-title').textContent,
+              relevance: calculateRelevance(searchTerm, title, description, keywords),
+            });
+
+            card.style.display = 'block';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+
+            // Animate in with stagger
+            setTimeout(() => {
+              card.style.transition = 'all 0.4s ease';
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0)';
+            }, matchingCards.length * 50);
+          } else {
+            card.style.transition = 'all 0.3s ease';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+              card.style.display = 'none';
+            }, 300);
+          }
+        });
+
+        // Update results info
+        updateResultsInfo(visibleCount, searchTerm);
+
+        // Show/hide no results message
+        if (visibleCount === 0) {
+          noResults.style.display = 'flex';
+          setTimeout(() => noResults.classList.add('show'), 10);
+          teamsGrid.style.opacity = '0.3';
+        } else {
+          noResults.classList.remove('show');
+          setTimeout(() => {
+            noResults.style.display = 'none';
+          }, 400);
+          teamsGrid.style.opacity = '1';
+        }
+
+        // Sort by relevance if searching
+        if (searchTerm) {
+          sortCardsByRelevance(matchingCards);
+        }
+      }
+
+      function calculateRelevance(searchTerm, title, description, keywords) {
+        if (!searchTerm) return 0;
+
+        let score = 0;
+        const terms = searchTerm.split(' ');
+
+        terms.forEach(term => {
+          if (title.includes(term)) score += 3; // Title matches are most relevant
+          if (keywords.includes(term)) score += 2; // Keywords are second most relevant
+          if (description.includes(term)) score += 1; // Description matches are least relevant
+        });
+
+        return score;
+      }
+
+      function sortCardsByRelevance(matchingCards) {
+        if (matchingCards.length <= 1) return;
+
+        // Sort by relevance score
+        matchingCards.sort((a, b) => b.relevance - a.relevance);
+
+        // Reorder DOM elements
+        const grid = document.getElementById('teamsGrid');
+        matchingCards.forEach((card, index) => {
+          setTimeout(() => {
+            grid.appendChild(card.element);
+          }, index * 50);
+        });
+      }
+
+      function updateResultsInfo(count, searchTerm) {
+        const resultsCount = document.getElementById('resultsCount');
+        const searchSuggestions = document.getElementById('searchSuggestions');
+
+        if (searchTerm) {
+          resultsCount.textContent = `${count} team${count !== 1 ? 's' : ''} found`;
+
+          // Generate suggestions for low result counts
+          if (count <= 2 && searchTerm.length > 2) {
+            const suggestions = generateSearchSuggestions(searchTerm);
+            searchSuggestions.textContent = suggestions;
+          } else {
+            searchSuggestions.textContent = '';
+          }
+        } else {
+          const totalCards = document.querySelectorAll('.team-card').length;
+          const categoryText = currentCategory === 'all' ? 'teams' : currentCategory + ' teams';
+          resultsCount.textContent = `Showing ${count} ${categoryText}`;
+          searchSuggestions.textContent = '';
+        }
+      }
+
+      function generateSearchSuggestions(searchTerm) {
+        const suggestions = [];
+        const searchWords = searchTerm.toLowerCase().split(' ');
+
+        teamData.forEach(team => {
+          team.keywords.forEach(keyword => {
+            searchWords.forEach(word => {
+              if (keyword.includes(word) || word.includes(keyword)) {
+                const relatedKeywords = team.keywords.filter(k => k !== keyword && k.length > 3);
+                if (relatedKeywords.length > 0) {
+                  suggestions.push(relatedKeywords[0]);
+                }
+              }
+            });
+          });
+        });
+
+        if (suggestions.length > 0) {
+          const uniqueSuggestions = [...new Set(suggestions)].slice(0, 3);
+          return `Try: ${uniqueSuggestions.join(', ')}`;
+        }
+
+        return '';
+      }
+
+      function filterByCategory(category) {
+        currentCategory = category;
+
+        // Update active tab
+        const tabs = document.querySelectorAll('.filter-tab');
+        tabs.forEach(tab => {
+          tab.classList.toggle('active', tab.getAttribute('data-category') === category);
+        });
+
+        // Clear search when changing category
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput.value) {
+          searchInput.value = '';
+          document.getElementById('clearSearch').style.display = 'none';
+        }
+
+        // Perform filtered search
+        performSearch();
+      }
+
+      function clearSearch() {
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearSearch');
+
+        searchInput.value = '';
+        clearBtn.style.display = 'none';
+        searchInput.focus();
+
+        performSearch();
+      }
+
+      function clearAllFilters() {
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearSearch');
+
+        // Reset search
+        searchInput.value = '';
+        clearBtn.style.display = 'none';
+
+        // Reset category to 'all'
+        filterByCategory('all');
+      }
+
+      // Theme switching functionality
+      function initThemeToggle() {
+        const themeToggle = document.getElementById('darkModeToggle');
+        const themeIcon = themeToggle.querySelector('span:first-child');
+        const themeText = themeToggle.querySelector('span:last-child');
+
+        // Get saved theme or default to dark
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+
+        // Apply theme on page load
+        applyTheme(currentTheme);
+
+        // Theme toggle event listener
+        themeToggle.addEventListener('click', function () {
+          currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          applyTheme(currentTheme);
+          localStorage.setItem('theme', currentTheme);
+        });
+
+        function applyTheme(theme) {
+          // Use requestAnimationFrame for smoother transitions
+          requestAnimationFrame(() => {
+            document.documentElement.setAttribute('data-theme', theme);
+            document.body.setAttribute('data-theme', theme);
+
+            // Update button appearance
+            if (theme === 'light') {
+              themeIcon.textContent = '🌙';
+              themeText.textContent = 'Dark Mode';
+              themeToggle.setAttribute('title', 'Switch to Dark Mode');
+            } else {
+              themeIcon.textContent = '☀️';
+              themeText.textContent = 'Light Mode';
+              themeToggle.setAttribute('title', 'Switch to Light Mode');
+            }
+          });
+        }
+      }
+
+      // Login Modal functionality
+      function initLoginModal() {
+        const modal = document.getElementById('loginModal');
+        const signInBtn = document.getElementById('signInBtn');
+        const closeBtn = document.getElementById('closeModal');
+        const overlay = modal.querySelector('.modal-overlay');
+        const loginForm = document.getElementById('loginForm');
+
+        // Open modal
+        signInBtn.addEventListener('click', function () {
+          modal.style.display = 'flex';
+
+          // Ensure modal is scrolled into view
+          modal.scrollTop = 0;
+
+          // Center the modal on screen
+          setTimeout(() => {
+            modal.classList.add('show');
+
+            // Focus on the first input for better UX
+            const firstInput = modal.querySelector('#username');
+            if (firstInput) {
+              firstInput.focus();
+            }
+
+            // Ensure modal is visible by scrolling it into view
+            modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 10);
+
+          // Prevent body scrolling
+          document.body.style.overflow = 'hidden';
+          document.body.style.position = 'fixed';
+          document.body.style.top = `-${window.scrollY}px`;
+          document.body.style.width = '100%';
+        });
+
+        // Close modal function
+        function closeModal() {
+          modal.classList.remove('show');
+          setTimeout(() => {
+            modal.style.display = 'none';
+
+            // Restore body scroll position
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.overflow = 'auto';
+
+            // Restore scroll position
+            if (scrollY) {
+              window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            }
+          }, 300);
+        }
+
+        // Close modal events
+        closeBtn.addEventListener('click', closeModal);
+        overlay.addEventListener('click', closeModal);
+
+        // Close modal on Escape key and handle keyboard navigation
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && modal.classList.contains('show')) {
+            closeModal();
+          }
+
+          // Trap focus within modal when it's open
+          if (modal.classList.contains('show') && e.key === 'Tab') {
+            const focusableElements = modal.querySelectorAll(
+              'button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            if (e.shiftKey && document.activeElement === firstElement) {
+              e.preventDefault();
+              lastElement.focus();
+            } else if (!e.shiftKey && document.activeElement === lastElement) {
+              e.preventDefault();
+              firstElement.focus();
+            }
+          }
+        });
+
+        // Handle form submission
+        loginForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          const username = document.getElementById('username').value;
+          const password = document.getElementById('password').value;
+          const rememberMe = document.getElementById('rememberMe').checked;
+
+          // Disable form and show loading state
+          const submitBtn = loginForm.querySelector('.login-submit-btn');
+          const btnText = submitBtn.querySelector('.btn-text');
+          const btnLoading = submitBtn.querySelector('.btn-loading');
+
+          submitBtn.disabled = true;
+          btnText.style.display = 'none';
+          btnLoading.style.display = 'inline';
+
+          // Sample credentials for testing
+          const validCredentials = [
+            { username: 'admin', password: 'barclays123', name: 'Admin User' },
+            { username: 'j.smith', password: 'password123', name: 'John Smith' },
+            { username: 'sarah.jones', password: 'secure456', name: 'Sarah Jones' },
+            { username: 'manager', password: 'manager2024', name: 'Operations Manager' },
+            { username: 'analyst', password: 'data789', name: 'Risk Analyst' },
+            { username: 'demo', password: 'demo', name: 'Demo User' },
+          ];
+
+          // Simulate login process (replace with actual authentication)
+          setTimeout(() => {
+            if (!username || !password) {
+              alert('Please enter both username and password');
+              submitBtn.disabled = false;
+              btnText.style.display = 'inline';
+              btnLoading.style.display = 'none';
+              return;
+            }
+
+            // Check credentials
+            const user = validCredentials.find(
+              cred =>
+                (cred.username === username.toLowerCase() || cred.username === username) && cred.password === password
+            );
+
+            if (user) {
+              // Successful login
+              alert(`Login successful! Welcome, ${user.name}`);
+              closeModal();
+
+              // Update UI to show logged in state
+              signInBtn.textContent = `Welcome, ${user.name}`;
+              signInBtn.classList.remove('barclays-btn');
+              signInBtn.classList.add('barclays-secondary-btn');
+              signInBtn.style.cursor = 'default';
+
+              // Reset form
+              loginForm.reset();
+            } else {
+              // Invalid credentials
+              alert(
+                'Invalid username or password. Please try again.\n\nSample credentials:\nUsername: demo, Password: demo\nUsername: admin, Password: barclays123'
+              );
+            }
+
+            // Reset button state
+            submitBtn.disabled = false;
+            btnText.style.display = 'inline';
+            btnLoading.style.display = 'none';
+          }, 2000);
+        });
+      }
+
+      // Initialize app when DOM is loaded
+      document.addEventListener('DOMContentLoaded', function () {
+        initApp();
+        initLoginModal();
+        initThemeToggle();
+        initializeSearch(); // Initialize the enhanced search functionality
+      });
+
+      // Add hover effects for better interactivity
+      document.addEventListener('mouseover', function (e) {
+        if (e.target.closest('.team-card')) {
+          const card = e.target.closest('.team-card');
+          card.style.transition = 'all 0.3s ease';
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Barclays Theme Variables */
+@layer base {
+  :root {
+    --barclays-blue: #00aeef;
+    --barclays-blue-dark: #0077a3;
+    --barclays-blue-light: #1a222b;
+    --barclays-cyan: #00c1d5;
+    --barclays-red: #ff6b6b;
+    --barclays-yellow: #ffe066;
+    --barclays-green: #22c55e;
+  }
+
+  [data-theme='dark'] {
+    --barclays-bg: #10151a;
+    --barclays-surface: #1a222b;
+    --barclays-text: #e6f6fb;
+    --barclays-muted: #7fb7c9;
+    --barclays-border: #2a3a4d;
+    --barclays-input-bg: #10151a;
+    --barclays-header-bg: #1a222b;
+  }
+
+  [data-theme='light'] {
+    --barclays-bg: #ffffff;
+    --barclays-surface: #f8fafc;
+    --barclays-text: #1a222b;
+    --barclays-muted: #475569;
+    --barclays-border: #cbd5e1;
+    --barclays-input-bg: #ffffff;
+    --barclays-header-bg: #ffffff;
+  }
+}
+
+/* Custom Components */
+@layer components {
+  .barclays-btn {
+    @apply bg-barclays-blue text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 hover:bg-barclays-blue-dark hover:shadow-lg;
+  }
+
+  .barclays-secondary-btn {
+    @apply bg-transparent border border-current text-current font-medium px-4 py-2 rounded-lg transition-all duration-200 hover:bg-current hover:text-white;
+  }
+}
